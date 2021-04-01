@@ -11,9 +11,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 14400
+    env: 
+      DOCKER_BUILDKIT: 1
+      DOCKER_IMAGE: ci/${{ github.job }}
+      BUILD_CACHE: /home/runner/.docker/buildkit
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/cache@v1
+      with:
+        path: ${{ env.BUILD_CACHE }}
+        key: ${{ hashFiles('Dockerfile') }}
+
+    - name : Start Qemu container
+      run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - name: Build the Docker image
-      run: ./build.sh
-      #run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      #run: ./build.sh
+      run: docker build . --tag tensorflow-arm64:$(date +%s)

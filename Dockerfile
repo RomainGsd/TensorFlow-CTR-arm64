@@ -246,6 +246,16 @@ RUN git checkout v2.4.0
 # RUN mv /usr/local/cuda-11.0/bin/nvcc /usr/local/cuda/bin/
 # RUN mv /usr/local/cuda-11.0/nvvm/libdevice/libdevice.10.bc /usr/local/cuda/nvvm/libdevice/
 
+#Install TensorRT
+ARG OS="ubuntu1804"
+ARG TAG="cuda11.1-trt7.2.1.6-ga-20201007"
+COPY nv-tensorrt-repo-ubuntu1804-cuda11.1-trt7.2.1.6-ga-20201007_1-1_arm64.deb .
+RUN dpkg -i "nv-tensorrt-repo-$OS-cuda11.1-trt7.2.1.6-ga-20201007_1-1_arm64.deb"
+RUN apt-key add /var/nv-tensorrt-repo-cuda11.1-trt7.2.1.6-ga-20201007/7fa2af80.pub
+RUN apt-get update
+RUN apt-get install -y tensorrt
+RUN dpkg -l | grep TensorRT
+
 # /!\ WARNING /!\ Configure inputs changes for each TF version
 # Printf args correspond to ./configure inputs :
 #   Python path:                            "" (default)
@@ -268,9 +278,9 @@ RUN bazel build \
     //tensorflow/tools/pip_package:build_pip_package
 
 # Build the wheel package
-RUN ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+#RUN ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 # Install the package
-RUN pip install $(ls -tr /tmp/tensorflow_pkg/tensorflow-*.whl | tail)
+#RUN pip install $(ls -tr /tmp/tensorflow_pkg/tensorflow-*.whl | tail)
 
 CMD ["bash", "-l"]
 

@@ -1,4 +1,4 @@
-# TF-CTR-arm64
+# TensorFlow for arm64
 Tensorflow container with Tensorrt support for arm64 - CUDA(11.1) CUDNN(8.1.1) TensorRT(7.2.1)
 
 Follow this guide to install tensorRT : 

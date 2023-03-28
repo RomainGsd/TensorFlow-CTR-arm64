@@ -37,7 +37,8 @@ ENV CC=gcc \
     BASE_CFLAGS="-moutline-atomics"
 
 #Install core OS packages
-RUN apt-get -y update && \
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get -y update && \
     apt-get -y install software-properties-common && \
     add-apt-repository ppa:ubuntu-toolchain-r/test && \
     apt-get -y install \
